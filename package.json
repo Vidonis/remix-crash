@@ -1,5 +1,6 @@
 {
   "name": "@vidonis-oss/remix-crash",
+  "repository": "https://github.com/vidonis/remix-crash",
   "version": "0.1.4",
   "license": "MIT",
   "files": [
