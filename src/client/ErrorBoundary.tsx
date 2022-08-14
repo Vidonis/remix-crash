@@ -9,7 +9,7 @@ import hljs from "highlight.js";
 import codeStyles from "highlight.js/styles/github-dark.css";
 import {
   createContext,
-  FunctionComponent,
+  PropsWithChildren,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -51,9 +51,10 @@ export const defaultErrorState: ErrorState = {
 
 export const ErrorContext = createContext(defaultErrorState);
 
-export const ErrorContextProvider: FunctionComponent<{
-  stacktrace: Stacktrace;
-}> = ({ children, stacktrace }) => {
+export const ErrorContextProvider = ({
+  children,
+  stacktrace,
+}: PropsWithChildren<{ stacktrace: Stacktrace }>) => {
   const sanitizedStacktrace = useMemo(() => {
     return stacktrace.map((line) => {
       const sanitizedLine = line.replace("at", "").trim();
@@ -276,10 +277,10 @@ const StacktraceList = () => {
   );
 };
 
-export const StackTraceLine: FunctionComponent<{ index: number }> = ({
+export const StackTraceLine = ({
   index,
   children,
-}) => {
+}: PropsWithChildren<{ index: number }>) => {
   const { convertedStacktrace, setSelectedIndex, loading, selectedIndex } =
     useError();
 
