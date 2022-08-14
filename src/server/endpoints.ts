@@ -1,8 +1,9 @@
-import { ActionFunction, LoaderFunction, json } from "remix";
+import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
+import axios from "axios";
+import { readFile } from "fs/promises";
+import path from "path";
 import { SourceMapConsumer } from "source-map";
 import { CORSResponse } from "./utils";
-import { readFile } from "fs/promises";
-import axios from "axios";
 
 async function getFileContent(pathOrURL: string): Promise<string> {
   const isRemote = new RegExp(/^http(s)?:\/\//).test(pathOrURL);
@@ -63,7 +64,15 @@ export const action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
   const root = process.cwd();
 
-  const bundledFile = url.searchParams.get("file");
+  let bundledFile = url.searchParams.get("file");
+
+  if (bundledFile) {
+    bundledFile = bundledFile.replace(
+      `${path.join(process.cwd(), "build", "route")}`,
+      ""
+    );
+  }
+
   const line = url.searchParams.get("line");
   const column = url.searchParams.get("column");
 
@@ -85,11 +94,13 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const consumer = await new SourceMapConsumer(rawSourceMap);
+  const sm: any = SourceMapConsumer;
 
-  if (!line || !column) {
-    throw new Error("Failed to load source map");
-  }
+  sm.initialize({
+    "lib/mappings.wasm": "https://unpkg.com/source-map@0.7.3/lib/mappings.wasm",
+  });
+
+  const consumer = await new SourceMapConsumer(rawSourceMap);
 
   const sourcePosition = consumer.originalPositionFor({
     line: +line,
@@ -107,6 +118,8 @@ export const action: ActionFunction = async ({ request }) => {
     ) ?? null;
 
   const file = sourcePosition.source.replace("route-module:", "");
+
+  consumer.destroy();
 
   return json({
     root,

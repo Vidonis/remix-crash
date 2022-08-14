@@ -1,4 +1,13 @@
 import {
+  Links,
+  LiveReload,
+  Meta,
+  Scripts,
+  ScrollRestoration,
+} from "@remix-run/react";
+import hljs from "highlight.js";
+import codeStyles from "highlight.js/styles/github-dark.css";
+import {
   createContext,
   FunctionComponent,
   useContext,
@@ -7,10 +16,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Links, LiveReload, Meta, Scripts, ScrollRestoration } from "remix";
-import codeStyles from "highlight.js/styles/github-dark.css";
 import styles from "./index.css";
-import hljs from "highlight.js";
 
 export type Stacktrace = Array<string>;
 
@@ -258,7 +264,7 @@ const StacktraceList = () => {
   if (loading) return null;
 
   return (
-    <ul className="h-screen max-h-screen overflow-y-scroll">
+    <ul className="h-screen max-h-screen">
       {stacktrace.map((line, index) => {
         return (
           <StackTraceLine key={index} index={index}>

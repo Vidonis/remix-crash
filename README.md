@@ -1,4 +1,4 @@
-> ⚠️ DEPRECATED due to a lack of time, Remix Crash is deprecated.
+> ⚠️ This is a fork of [remix-crash](https://github.com/xstevenyung/remix-crash). We don't plan on improving (although there's a chance if we have time). We just plan on keeping in stable and up to date
 
 # Remix Crash
 
